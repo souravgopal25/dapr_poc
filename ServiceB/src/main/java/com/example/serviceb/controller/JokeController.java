@@ -1,7 +1,7 @@
-package com.example.servicea.controller;
+package com.example.serviceb.controller;
 
-import com.example.servicea.dto.Joke;
-import com.example.servicea.service.JokeService;
+import com.example.serviceb.model.Joke;
+import com.example.serviceb.service.JokeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
