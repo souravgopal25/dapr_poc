@@ -12,4 +12,14 @@ public class Joke {
     String punchline;
     String setup;
     String type;
+
+    @Override
+    public String toString() {
+        return "Joke{" +
+                "id='" + id + '\'' +
+                ", punchline='" + punchline + '\'' +
+                ", setup='" + setup + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

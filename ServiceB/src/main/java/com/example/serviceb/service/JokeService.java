@@ -15,20 +15,41 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class JokeService {
-    String serviceAPath = "http://localhost:8080/joke";
+    //    String serviceAPath = "http://localhost:8080/joke";
     private static final Logger logger = LoggerFactory.getLogger(JokeService.class.getName());
 
-//    //private DaprClient daprClient;
-//
-//    public JokeService(final DaprClient daprClient) {
-//        this.daprClient = daprClient;
-//    }
+    private DaprClient daprClient;
+    private StateManagementService stateManagementService;
+
+    public JokeService(DaprClient daprClient, StateManagementService stateManagementService) {
+        this.daprClient = daprClient;
+        this.stateManagementService = stateManagementService;
+    }
 
 
-    public ResponseEntity<Joke> getJokeFromApi() throws IOException {
+    private final AtomicLong counter = new AtomicLong();
+
+    public ResponseEntity<List<Joke>> getAllSavedJokeFromApi() throws IOException {
+        List<String> keyList = new ArrayList<>();
+        for (Long i = 0L; i < counter.get(); i++) {
+            keyList.add(String.valueOf(i));
+        }
+        List<Joke> jokeList = stateManagementService.getBulkState(keyList, Joke.class);
+        return new ResponseEntity<List<Joke>>(jokeList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Joke> getJokeFromId(Long id) {
+        Joke joke = stateManagementService.getState(String.valueOf(id), Joke.class);
+        return new ResponseEntity<Joke>(joke, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Joke> getJokeFromApi() throws Exception {
 
 //        DaprClient daprClient = new DaprClientBuilder().build();
 //        List<Joke> jokeList = new ArrayList<>();
@@ -54,11 +75,16 @@ public class JokeService {
 //        Mono<String> stringMono = daprClient.invokeMethod("serviceA", "/joke", null, HttpExtension.GET, String.class);
 //        System.out.println(stringMono.toString());
         logger.info("Get Joke Hit");
-
-        DaprClient daprClient = new DaprClientBuilder().build();
         Joke response = daprClient.invokeMethod("serviceA", "joke", null, HttpExtension.GET, Joke.class).block();
-        System.out.println(response);
-        return new ResponseEntity<Joke>(response, HttpStatus.OK);
+        if (response != null) {
+            response.setId(String.valueOf(counter.incrementAndGet()));
+            response.setType("Service B");
+            stateManagementService.saveState(response.getId(), response);
+            logger.info(response.toString());
+        } else {
+            throw new Exception("Joke Not found");
+        }
 
+        return new ResponseEntity<Joke>(response, HttpStatus.OK);
     }
 }

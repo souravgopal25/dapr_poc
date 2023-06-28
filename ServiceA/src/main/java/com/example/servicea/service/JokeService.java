@@ -35,7 +35,7 @@ public class JokeService {
                             .id("Sample Id")
                             .punchline(jokeJson.getString("punchline"))
                             .setup(jokeJson.getString("question"))
-                            .type("Sample Type")
+                            .type("Service A")
                             .build();
                     jokeList.add(joke);
                 })
