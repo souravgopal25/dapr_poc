@@ -1,6 +1,7 @@
 package com.example.serviceb.service;
 
 import com.example.serviceb.model.Joke;
+import com.example.serviceb.model.Message;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
 import io.dapr.client.domain.HttpExtension;
@@ -10,11 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,7 +20,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class JokeService {
     //    String serviceAPath = "http://localhost:8080/joke";
     private static final Logger logger = LoggerFactory.getLogger(JokeService.class.getName());
-
+    public static final String PUBSUB_NAME = "pubsub";
+    public static final String TOPIC_NAME = "exampleTopic";
     private DaprClient daprClient;
     private StateManagementService stateManagementService;
 
@@ -79,8 +77,12 @@ public class JokeService {
         if (response != null) {
             response.setId(String.valueOf(counter.incrementAndGet()));
             response.setType("Service B");
-            stateManagementService.saveState(response.getId(), response);
+            //stateManagementService.saveState(response.getId(), response);
             logger.info(response.toString());
+            daprClient.publishEvent(PUBSUB_NAME, TOPIC_NAME,
+                    Message.builder()
+                            .message("Response Received Success")
+                            .id(response.getId()).build()).block();
         } else {
             throw new Exception("Joke Not found");
         }

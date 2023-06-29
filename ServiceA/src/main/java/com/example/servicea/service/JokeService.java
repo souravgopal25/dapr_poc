@@ -28,7 +28,7 @@ public class JokeService {
                 .execute()
                 .toCompletableFuture()
                 .thenAccept(response -> {
-                    logger.info(String.valueOf(response));
+                    //logger.info(String.valueOf(response));
                     JSONArray body = new JSONArray(response.getResponseBody());
                     JSONObject jokeJson = body.getJSONObject(0);
                     Joke joke = Joke.builder()

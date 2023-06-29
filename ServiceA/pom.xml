@@ -15,6 +15,7 @@
     <description>ServiceA</description>
     <properties>
         <java.version>17</java.version>
+        <dapr.version>1.7.1</dapr.version>
     </properties>
     <dependencies>
         <dependency>
@@ -24,19 +25,19 @@
         <dependency>
             <groupId>io.dapr</groupId>
             <artifactId>dapr-sdk</artifactId>
-            <version>1.8.0</version>
+            <version>${dapr.version}</version>
         </dependency>
         <!-- Dapr's SDK for Actors (optional). -->
         <dependency>
             <groupId>io.dapr</groupId>
             <artifactId>dapr-sdk-actors</artifactId>
-            <version>1.8.0</version>
+            <version>${dapr.version}</version>
         </dependency>
         <!-- Dapr's SDK integration with SpringBoot (optional). -->
         <dependency>
             <groupId>io.dapr</groupId>
             <artifactId>dapr-sdk-springboot</artifactId>
-            <version>1.8.0</version>
+            <version>${dapr.version}</version>
         </dependency>
 
         <dependency>
@@ -44,6 +45,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.28</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>3.4.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
