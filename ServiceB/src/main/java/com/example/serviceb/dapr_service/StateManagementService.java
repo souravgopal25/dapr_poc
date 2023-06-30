@@ -1,4 +1,4 @@
-package com.example.serviceb.service;
+package com.example.serviceb.dapr_service;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.domain.State;
@@ -9,7 +9,6 @@ import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class StateManagementService {

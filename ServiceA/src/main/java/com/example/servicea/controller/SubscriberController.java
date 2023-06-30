@@ -19,12 +19,12 @@ public class SubscriberController {
 
     @Topic(name = "exampleTopic", pubsubName = "pubsub")
     @PostMapping(path = "/exampleTopic", consumes = MediaType.ALL_VALUE)
-    public Mono<ResponseEntity> getSuccessMesage(@RequestBody(required = false) CloudEvent<String> cloudEvent) {
+    public Mono<ResponseEntity> getSuccessMesage(@RequestBody(required = false) CloudEvent<Message> cloudEvent) {
         logger.info("Subscriber Hit");
         return Mono.fromRunnable(() -> {
             try {
                 logger.info("Subscription Recieved");
-                logger.info(new ObjectMapper().writeValueAsString(cloudEvent));
+                logger.info(cloudEvent.getData().toString());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

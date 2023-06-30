@@ -15,7 +15,7 @@
     <description>ServiceA</description>
     <properties>
         <java.version>17</java.version>
-        <dapr.version>1.7.1</dapr.version>
+        <dapr.version>1.8.0</dapr.version>
     </properties>
     <dependencies>
         <dependency>
